@@ -22,7 +22,7 @@ app.use(router);
 let users = [];
 
 io.on("connection", (socket) => {
-  console.log("New user connected", socket.id);
+  // console.log("New user connected", socket.id);
   socket.emit("message", "Welcome to the socket server" + socket.id);
   // ...
 
@@ -42,15 +42,26 @@ io.on("connection", (socket) => {
 
   io.emit("users:online", users);
 
-  socket.on("pilihan:jawaban", (jawaban) => {
-    // console.log(jawaban, "ini di server");
-    socket.broadcast.emit("terima:jawaban", jawaban)
+  socket.on("pilihan:jawaban", (jawaban, jawabanP1, jawabanP2) => {
+    console.log('=======');
+    console.log(jawaban, "ini di server");
+    console.log(jawabanP1, "ini jawabanP1");
+    console.log(jawabanP2, "ini jawabanP2");
+    socket.broadcast.emit("terima:jawaban", jawaban, jawabanP1, jawabanP2)
   })
 
-  socket.on("kirim:clue", (clue) =>{
+  socket.on("kirim:clue", (clue) => {
     // console.log(clue, "<< ini di server");
     socket.broadcast.emit("terima:clue", clue)
-})
+  })
+  socket.on("change:player", (username) => {
+    socket.broadcast.emit("terima:username", username)
+  })
+
+  socket.on("current:score", (score) => {
+    // console.log(score, "ini score");
+    socket.broadcast.emit("terima:score", score)
+  })
 
   socket.on("disconnect", () => {
     users = users.filter((el) => el.id !== socket.id);
@@ -58,7 +69,7 @@ io.on("connection", (socket) => {
 
     io.emit("users:online", users);
   });
-  console.log("online users: ", users);
+  // console.log("online users: ", users);
 });
 
 app.get("/", (req, res, next) => {
