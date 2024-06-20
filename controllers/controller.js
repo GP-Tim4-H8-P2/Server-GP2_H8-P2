@@ -14,7 +14,6 @@ class Controller {
       // Pilih kata secara acak menggunakan Math.random()
       const randomIndex = Math.floor(Math.random() * allWords.length);
       const randomWord = allWords[randomIndex];
-
       // Kirim respons dengan kata-kata yang dipilih secara acak
       res.status(200).json({
         word: randomWord.words,
