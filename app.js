@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     io.emit("count:info", newCount);
   });
 
-  console.log("username: ", socket.handshake.auth.username);
+  // console.log("username: ", socket.handshake.auth.username);
   if (socket.handshake.auth.username) {
     users.push({
       id: socket.id,
@@ -41,6 +41,11 @@ io.on("connection", (socket) => {
   }
 
   io.emit("users:online", users);
+
+  socket.on("kirim:clue", (clue) =>{
+    console.log(clue, "<< ini di server");
+    socket.broadcast.emit("terima:clue", clue)
+})
 
   socket.on("disconnect", () => {
     users = users.filter((el) => el.id !== socket.id);
