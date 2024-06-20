@@ -42,13 +42,20 @@ io.on("connection", (socket) => {
 
   io.emit("users:online", users);
 
+  socket.on("pilihan:jawaban", (jawaban) => {
+    // console.log(jawaban, "ini di server");
+    socket.broadcast.emit("terima:jawaban", jawaban)
+  })
+
   socket.on("kirim:clue", (clue) =>{
-    console.log(clue, "<< ini di server");
+    // console.log(clue, "<< ini di server");
     socket.broadcast.emit("terima:clue", clue)
 })
 
   socket.on("disconnect", () => {
     users = users.filter((el) => el.id !== socket.id);
+    io.emit("terima:jawaban", "")
+
     io.emit("users:online", users);
   });
   console.log("online users: ", users);
